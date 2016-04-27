@@ -1,0 +1,160 @@
+<html xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:tiles="http://tiles.apache.org/tags-tiles"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util">
+
+<jsp:output doctype-root-element="HTML" doctype-system="about:legacy-compat" />
+<jsp:directive.page contentType="text/html;charset=UTF-8" />
+<jsp:directive.page pageEncoding="UTF-8" />
+
+<c:set var="basePath">${pageContext.request.scheme}://${pageContext.request.serverName}${pageContext.request.contextPath}</c:set>
+<!-- <link rel="shortcut icon" href="${basePath}/images/hsh_browser_icon.png" type="image/x-icon" /> -->
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>JY</title>
+</head>
+
+<body>
+	1. Sign In:
+	<form action="${basePath}/r/user/signin" enctype="multipart/form-data" method="post">
+		name<input type="text" name="name" value="Kelvin"/>&amp;nbsp;&amp;nbsp;
+		lat<input type="text" name="lat" value="36.61561"/>&amp;nbsp;&amp;nbsp;
+		lng<input type="text" name="lng" value="-121.90362359999999"/>&amp;nbsp;&amp;nbsp;
+		gender<input type="text" name="gender" value="M"/>&amp;nbsp;&amp;nbsp;
+		interestIn<input type="text" name="interestIn" value="F"/>&amp;nbsp;&amp;nbsp;
+		deviceToken<input type="text" name="deviceToken" value=" "/>&amp;nbsp;&amp;nbsp;
+		pic:<input type="file" name="pic" value=" "/>
+		width:<input type="text" name="width" value=" "/>
+		height:<input type="text" name="height" value=" "/>
+		<input type="submit" value="submit"/>
+	</form>
+	<hr/><hr/>
+	2. Update location:
+	<form action="${basePath}/r/user/location/update" method="post">
+		lat<input type="text" name="lat" value="36.61561"/>&amp;nbsp;&amp;nbsp;
+		lng<input type="text" name="lng" value="-121.90362359999999"/>&amp;nbsp;&amp;nbsp;
+		uuid<input type="text" name="uuid" value=" "/>&amp;nbsp;&amp;nbsp;
+		<input type="submit" value="submit"/>
+	</form>
+	<hr/><hr/>
+	3. Update profile:
+	<form action="${basePath}/r/user/profile/edit" enctype="multipart/form-data" method="post">
+		uuid<input type="text" name="uuid" value=" "/>&amp;nbsp;&amp;nbsp;
+		lat<input type="text" name="lat" value="36.61561"/>&amp;nbsp;&amp;nbsp;
+		lng<input type="text" name="lng" value="-121.90362359999999"/>&amp;nbsp;&amp;nbsp;
+		gender<input type="text" name="gender" value="M"/>&amp;nbsp;&amp;nbsp;
+		interestIn<input type="text" name="interestIn" value="F"/>&amp;nbsp;&amp;nbsp;
+		pic:<input type="file" name="pic" value=" "/>
+		width:<input type="text" name="width" value=" "/>
+		height:<input type="text" name="height" value=" "/>
+		<input type="submit" value="submit"/>
+	</form>
+	<hr/><hr/>
+	4. Get profile:
+	<form action="${basePath}/r/user/profile" method="get">
+		uuid<input type="text" name="uuid" value=" "/>&amp;nbsp;&amp;nbsp;
+		lat<input type="text" name="lat" value="36.61561"/>&amp;nbsp;&amp;nbsp;
+		lng<input type="text" name="lng" value="-121.90362359999999"/>&amp;nbsp;&amp;nbsp;
+		interestIn<input type="text" name="interestIn" value="F"/>&amp;nbsp;&amp;nbsp;
+		pageNumber<input type="text" name="pageNumber" value="1"/>&amp;nbsp;&amp;nbsp;
+		pageSize<input type="text" name="pageSize" value="1"/>&amp;nbsp;&amp;nbsp;
+		<input type="submit" value="submit"/>
+	</form>
+	<hr/><hr/>
+	5. Get user message:
+	<form action="${basePath}/r/message/" method="get">
+		uuid<input type="text" name="uuid" value=" "/>&amp;nbsp;&amp;nbsp;
+		pageNumber<input type="text" name="pageNumber" value="1"/>&amp;nbsp;&amp;nbsp;
+		pageSize<input type="text" name="pageSize" value="1"/>&amp;nbsp;&amp;nbsp;
+		<input type="submit" value="submit"/>
+	</form>
+	<hr/><hr/>
+	6. Get user message count:
+	<form action="${basePath}/r/message/unreadCount" method="get">
+		uuid<input type="text" name="uuid" value=" "/>&amp;nbsp;&amp;nbsp;
+		<input type="submit" value="submit"/>
+	</form>
+	<hr/><hr/>
+	7. Send message:
+	<form action="${basePath}/r/message/send" enctype="multipart/form-data"  method="post">
+		uuid<input type="text" name="uuid" value=" "/>&amp;nbsp;&amp;nbsp;
+		receiver<input type="text" name="receiver" value=" "/>&amp;nbsp;&amp;nbsp;
+		content<input type="text" name="content" value=" "/>&amp;nbsp;&amp;nbsp;
+		pic:<input type="file" name="pic" value=" "/>
+		width:<input type="text" name="width" value=" "/>
+		height:<input type="text" name="height" value=" "/>
+		<input type="submit" value="submit"/>
+	</form>
+	<hr/><hr/>
+	8. Reply message:
+	<form action="${basePath}/r/message/reply" enctype="multipart/form-data"  method="post">
+		uuid<input type="text" name="uuid" value=" "/>&amp;nbsp;&amp;nbsp;
+		content<input type="text" name="content" value=" "/>&amp;nbsp;&amp;nbsp;
+		Message id<input type="text" name="messageId" value=" "/>&amp;nbsp;&amp;nbsp;
+		pic:<input type="file" name="pic" value=" "/>
+		width:<input type="text" name="width" value=" "/>
+		height:<input type="text" name="height" value=" "/>
+		<input type="submit" value="submit"/>
+	</form>
+	<hr/><hr/>
+	9. Delete message:
+	<form action="${basePath}/r/message/delete" method="post">
+		uuid<input type="text" name="uuid" value=" "/>&amp;nbsp;&amp;nbsp;
+		messageId<input type="text" name="messageId" value=" "/>&amp;nbsp;&amp;nbsp;
+		<input type="submit" value="submit"/>
+	</form>
+	<hr/><hr/>
+	10. Send friend request:
+	<form action="${basePath}/r/message/sendFriendRequest" enctype="multipart/form-data"  method="post">
+		uuid<input type="text" name="uuid" value=" "/>&amp;nbsp;&amp;nbsp;
+		receiver<input type="text" name="receiver" value=" "/>&amp;nbsp;&amp;nbsp;
+		<input type="submit" value="submit"/>
+	</form>
+	<hr/><hr/>
+	11. Accept request:
+	<form action="${basePath}/r/message/acceptFriendRequest" method="post">
+		uuid<input type="text" name="uuid" value=" "/>&amp;nbsp;&amp;nbsp;
+		messageId<input type="text" name="messageId" value=" "/>&amp;nbsp;&amp;nbsp;
+		<input type="submit" value="submit"/>
+	</form>
+	<hr/><hr/>
+	12. Reject request:
+	<form action="${basePath}/r/message/rejectFriendRequest" method="post">
+		uuid<input type="text" name="uuid" value=" "/>&amp;nbsp;&amp;nbsp;
+		messageId<input type="text" name="messageId" value=" "/>&amp;nbsp;&amp;nbsp;
+		<input type="submit" value="submit"/>
+	</form>
+	<hr/><hr/>
+	13. Get friends:
+	<form action="${basePath}/r/friend/" method="get">
+		uuid<input type="text" name="uuid" value=" "/>&amp;nbsp;&amp;nbsp;
+		pageNumber<input type="text" name="pageNumber" value="1"/>&amp;nbsp;&amp;nbsp;
+		pageSize<input type="text" name="pageSize" value="1"/>&amp;nbsp;&amp;nbsp;
+		<input type="submit" value="submit"/>
+	</form>
+	<hr/><hr/>
+	14. Get friends count:
+	<form action="${basePath}/r/friend/count" method="get">
+		uuid<input type="text" name="uuid" value=" "/>&amp;nbsp;&amp;nbsp;
+		<input type="submit" value="submit"/>
+	</form>
+	<hr/><hr/>
+	15. Unfriend:
+	<form action="${basePath}/r/friend/unbind" method="post">®
+		uuid<input type="text" name="uuid" value=" "/>&amp;nbsp;&amp;nbsp;
+		friendId<input type="text" name="friendId" value=" "/>&amp;nbsp;&amp;nbsp;
+		<input type="submit" value="submit"/>
+	</form>
+	<hr/><hr/>
+	16. Oursoucing:
+	<form action="http://ec2-54-209-2-61.compute-1.amazonaws.com:6543/api/user/login" method="post">
+		username<input type="text" name="email" value=" "/>&amp;nbsp;&amp;nbsp;
+		password<input type="text" name="password" value=" "/>&amp;nbsp;&amp;nbsp;
+		<input type="submit" value="submit"/>
+	</form>
+	<hr/><hr/>
+</body>
+</html>

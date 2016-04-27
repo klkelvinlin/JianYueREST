@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--suppress ALL -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+	<bean id="emailService" class="com.jy.mail.service.DefaultEmailService">
+		<property name="emailMessageDao" ref="emailMessageDao" />
+	</bean>
+
+	<bean id="emailMessageProducer" class="com.jy.mail.service.FreemarkerEmailMessageProducer">
+		<property name="freeMarkerConfig" ref="freeMarkerConfig" />
+	</bean>
+
+	<bean id="freeMarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="classpath:/META-INF/spring/" />
+	</bean>
+
+	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host">
+			<value>smtp.gmail.com</value>
+		</property>
+		<property name="username">
+			<value>notification@hshub.com</value>
+		</property>
+		<property name="password">
+			<value>tongzhimima</value>
+		</property>
+		<property name="port">
+			<value>465</value>
+		</property>
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.timeout">30000</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+				<prop key="mail.smtp.socketFactory.fallback">false</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="taskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5" />
+		<property name="maxPoolSize" value="10" />
+		<property name="queueCapacity" value="25" />
+		<property name="keepAliveSeconds" value="60"></property>
+	</bean>
+
+	<bean id="mailQueueWorker" class="com.jy.mail.service.EmailQueueWorker">
+		<property name="emailMessageDao" ref="emailMessageDao" />
+		<property name="javaMailSender" ref="javaMailSender" />
+		<property name="taskExecutor" ref="taskExecutor" />
+	</bean>
+
+</beans>

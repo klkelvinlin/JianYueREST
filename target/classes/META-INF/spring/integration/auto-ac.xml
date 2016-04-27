@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:int="http://www.springframework.org/schema/integration"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:int-jms="http://www.springframework.org/schema/integration/jms"
+             xmlns:task="http://www.springframework.org/schema/task"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/integration
+			http://www.springframework.org/schema/integration/spring-integration.xsd
+			http://www.springframework.org/schema/integration/jms
+			http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd
+			http://www.springframework.org/schema/task
+			http://www.springframework.org/schema/task/spring-task.xsd">
+    <beans:import resource="common.xml"/>
+    <beans:import resource="auto-ac-beans.xml"/>
+    <!--<int-jms:message-driven-channel-adapter id="autoACInJms" acknowledge="auto" auto-startup="true"
+                                            destination="requestQueue" channel="requestChannel"/>-->
+    <!-- <int:gateway id="" default-request-channel="requestChannel" service-interface="">
+        <int:method name="getDefectRequest"/>
+    </int:gateway> -->
+
+    <int:channel id="requestChannel">
+        <int:dispatcher task-executor="executor"/>
+    </int:channel>
+
+   <!-- <int:chain input-channel="requestChannel">
+        <int:header-enricher>
+            <int:header name="AUTO_PULL_AC" expression="@defectRequestParser.needAutoACPull(payload)"/> 
+        </int:header-enricher>
+        <int:recipient-list-router apply-sequence="true">
+            <int:recipient channel="criteriaChannel" selector-expression="headers.AUTO_PULL_AC == true"/>
+            <int:recipient channel="surfaceChannel" selector-expression="headers.AUTO_PULL_AC == false"/>
+        </int:recipient-list-router>
+    </int:chain>
+	-->
+	
+    <int:channel id="criteriaChannel"/>
+    <int:channel id="surfaceChannel"/>
+
+    <int:service-activator input-channel="criteriaChannel" ref="criteria" method="verify"/>
+    <int:service-activator input-channel="surfaceChannel" ref="surface" method="surface"/>
+
+    <task:executor id="executor" pool-size="100"/>
+    
+</beans:beans>

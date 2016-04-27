@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:context="http://www.springframework.org/schema/context"
+ xmlns:tx="http://www.springframework.org/schema/tx"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+    <bean id="placeholderProperties"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:/database.properties</value>
+            </list>
+        </property>
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+        <property name="ignoreUnresolvablePlaceholders" value="true" />
+        <property name="order" value="1" />
+    </bean>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${JDBC.driver}"/>
+        <property name="url" value="${JDBC.url}"/>
+        <property name="username" value="${JDBC.username}"/>
+        <property name="password" value="${JDBC.password}"/>
+        <property name="initialSize" value="${dbcp.initialSize}"/>
+        <property name="maxIdle" value="${dbcp.maxIdle}"/>
+        <property name="minIdle" value="${dbcp.minIdle}"/>
+        <property name="maxActive" value="${dbcp.maxActive}"/>
+        <property name="logAbandoned" value="${dbcp.logAbandoned}"/>
+        <property name="removeAbandoned" value="${dbcp.removeAbandoned}"/>
+        <property name="removeAbandonedTimeout" value="${dbcp.removeAbandonedTimeout}"/>
+        <property name="testOnBorrow" value="${dbcp.testOnBorrow}"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" order="2"/>
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+
+
+    <bean id="namingStrategy" class="com.jy.dataaccess.dao.namingstrategy.impl.NamingStrategyImpl" />
+    <bean id="finderIntroductionAdvisor" class="com.jy.dataaccess.dao.finder.impl.FinderIntroductionAdvisor" />
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:/inbound-mybatis-config.xml" />
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:/mapping-config/*.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="abstractDaoTarget" class="com.jy.dataaccess.dao.impl.GenericDaoImpl"
+          abstract="true" lazy-init="true">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+        <property name="namingStrategy" ref="namingStrategy" />
+    </bean>
+
+    <bean id="abstractDao" class="org.springframework.aop.framework.ProxyFactoryBean"
+          abstract="true">
+        <property name="optimize" value="true"/>
+        <property name="interceptorNames">
+            <list>
+                <value>finderIntroductionAdvisor</value>
+            </list>
+        </property>
+    </bean>
+    
+    <context:annotation-config />
+    <!-- <context:load-time-weaver/> -->
+
+</beans>

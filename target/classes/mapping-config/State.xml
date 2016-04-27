@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.domain.State" >
+
+  <resultMap id="BaseResultMap" type="com.jy.domain.State" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="COUNTRY_ID" property="countryId" jdbcType="BIGINT" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="CNAME" property="cname" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ID, COUNTRY_ID, NAME, CNAME
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from state
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <delete id="delete" parameterType="com.jy.domain.State" >
+    delete from state
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="create" parameterType="com.jy.domain.State" >
+    insert into state (ID, COUNTRY_ID, NAME, 
+      CNAME)
+    values (#{id,jdbcType=BIGINT}, #{countryId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
+      #{cname,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="update" parameterType="com.jy.domain.State" >
+    update state
+    <set >
+      <if test="countryId != null" >
+        COUNTRY_ID = #{countryId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="cname != null" >
+        CNAME = #{cname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  
+</mapper>

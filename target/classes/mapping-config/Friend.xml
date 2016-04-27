@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.domain.Friend" >
+
+  <resultMap id="BaseResultMap" type="com.jy.domain.Friend" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="friend_id" property="friendId" jdbcType="BIGINT" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <resultMap id="FriendUIResultMap" type="com.jy.domain.rest.FriendVO">
+    <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="friendId" property="friendId" jdbcType="BIGINT" />
+    <result column="friendName" property="friendName" jdbcType="VARCHAR" />
+    <result column="friendPic" property="friendPic" jdbcType="VARCHAR" />
+    <result column="friendPicWidth" property="friendPicWidth" jdbcType="INTEGER" />
+    <result column="friendPicHeight" property="friendPicHeight" jdbcType="INTEGER" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, user_id, friend_id, createtime
+  </sql>
+  
+  <select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from friend
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="getFriend" resultMap="FriendUIResultMap" parameterType="java.lang.Long" >
+    select 
+    f.id, f.createtime,
+    CASE 
+		WHEN f.user_id = #{userId,jdbcType=BIGINT} THEN f.friend_id 
+		WHEN f.friend_id = #{userId,jdbcType=BIGINT} THEN f.user_id
+	END as friendId,
+    CASE 
+		WHEN f.user_id = #{userId,jdbcType=BIGINT} THEN ff.name 
+		WHEN f.friend_id = #{userId,jdbcType=BIGINT} THEN fu.name
+	END as friendName,
+	CASE 
+		WHEN f.user_id = #{userId,jdbcType=BIGINT} THEN ff.pic 
+		WHEN f.friend_id = #{userId,jdbcType=BIGINT} THEN fu.pic
+	END as friendPic,
+	CASE 
+		WHEN f.user_id = #{userId,jdbcType=BIGINT} THEN ff.pic_width
+		WHEN f.friend_id = #{userId,jdbcType=BIGINT} THEN fu.pic_width
+	END as friendPicWidth,
+	CASE 
+		WHEN f.user_id = #{userId,jdbcType=BIGINT} THEN ff.pic_height 
+		WHEN f.friend_id = #{userId,jdbcType=BIGINT} THEN fu.pic_height
+	END as friendPicHeight
+    from friend f
+    left outer join user fu on f.user_id = fu.id
+    left outer join user ff on f.friend_id = ff.id
+    where f.user_id = #{userId,jdbcType=BIGINT} or f.friend_id = #{userId,jdbcType=BIGINT} and f.createtime <![CDATA[<]]> #{timestamp,jdbcType=VARCHAR}
+    order by f.createtime desc
+	limit #{firstResult,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getFriendCount" resultType="int" parameterType="java.lang.Long" >
+    select 
+    count(*)
+    from friend
+    where user_id = #{userId,jdbcType=BIGINT} or friend_id = #{userId,jdbcType=BIGINT}
+  </select>
+  
+  <select id="getFriendExist" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from friend
+    where (user_id = #{userId,jdbcType=BIGINT} and friend_id = #{friendId,jdbcType=BIGINT}) or (user_id = #{friendId,jdbcType=BIGINT} and friend_id = #{userId,jdbcType=BIGINT})
+  </select>
+  
+  <delete id="delete" parameterType="com.jy.domain.Friend" >
+    delete from friend
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="create" parameterType="com.jy.domain.Friend" useGeneratedKeys="true" keyProperty="id">
+    insert into friend (id, user_id, friend_id, 
+      createtime)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{friendId,jdbcType=BIGINT}, 
+      #{createtime,jdbcType=TIMESTAMP})
+  </insert>
+  
+  <update id="update" parameterType="com.jy.domain.Friend" >
+    update friend
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="friendId != null" >
+        friend_id = #{friendId,jdbcType=BIGINT},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+</mapper>

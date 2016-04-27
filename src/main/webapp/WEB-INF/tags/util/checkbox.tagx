@@ -1,0 +1,17 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+	<c:set var="basePath">${pageContext.request.scheme}://${pageContext.request.serverName}${pageContext.request.contextPath}</c:set>
+	<jsp:directive.attribute name="name" type="java.lang.String" required="true" />
+	<jsp:directive.attribute name="value" type="java.lang.String" required="true" />
+	<jsp:directive.attribute name="checked" type="java.lang.Boolean" required="true" />
+	
+	<c:if test="${checked }">
+		<input type="checkbox" name="${name }" value="${value }" checked="checked"/>
+	</c:if>
+	
+	<c:if test="${not checked }">
+		<input type="checkbox" name="${name }" value="${value }"/>
+	</c:if>
+</jsp:root>

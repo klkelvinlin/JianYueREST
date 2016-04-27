@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.domain.Message" >
+
+  <resultMap id="BaseResultMap" type="com.jy.domain.Message" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="sender_id" property="senderId" jdbcType="BIGINT" />
+    <result column="sender_pic" property="senderPic" jdbcType="VARCHAR" />
+    <result column="sender_pic_width" jdbcType="INTEGER" property="senderPicWidth" />
+    <result column="sender_pic_height" jdbcType="INTEGER" property="senderPicHeight" />
+    <result column="receiver_id" property="receiverId" jdbcType="BIGINT" />
+    <result column="msg" property="msg" jdbcType="VARCHAR" />
+    <result column="msg_type" property="msgType" jdbcType="VARCHAR" />
+    <result column="msg_status" property="msgStatus" jdbcType="VARCHAR" />
+    <result column="is_read" property="isRead" jdbcType="BIT" />
+    <result column="is_deleted" property="isDeleted" jdbcType="BIT" />
+    <result column="is_replied" property="isReplied" jdbcType="BIT" />
+    <result column="sendtime" property="sendtime" jdbcType="TIMESTAMP" />
+    <result column="readtime" property="readtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <resultMap id="FullResultMap" type="com.jy.domain.rest.MessageVO" extends="BaseResultMap">
+    <result column="isFriend" property="isFriend" jdbcType="BIT" />
+    <result column="senderName" property="senderName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    m.id, sender_id, sender_pic, sender_pic_width, sender_pic_height, receiver_id, msg, msg_type, msg_status, is_read, is_deleted, 
+    is_replied, sendtime, readtime
+  </sql>
+  
+  <select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from message m
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getFriendRequestBySenderAndReceiver" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from message m
+    where sender_id = #{senderId,jdbcType=INTEGER} and receiver_id = #{receiverId,jdbcType=INTEGER} and msg_type=#{msgType,jdbcType=VARCHAR} and msg_status = #{msgStatus,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getUserUnreadMessage" resultMap="FullResultMap" parameterType="java.lang.Long" >
+    select 
+    distinct m.id, sender_id, u.name as senderName, sender_pic, sender_pic_width, sender_pic_height, receiver_id, msg, msg_type, msg_status, is_read, is_deleted, 
+    is_replied, sendtime, readtime,
+    case 
+		when  (f.user_id = m.sender_id and f.friend_id = m.receiver_id) or (f.user_id = m.receiver_id and f.friend_id = m.sender_id)  then 1
+     	else   0
+    end as isFriend
+    from message m, friend f, `user` u
+    where m.sender_id = u.id and is_read = 0 and is_deleted = 0 and is_replied = 0 and receiver_id = #{receiverId,jdbcType=BIGINT} and sendtime <![CDATA[<]]> #{timestamp,jdbcType=VARCHAR}
+    group by m.id
+    order by sendtime desc
+	limit #{firstResult,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getUserUnreadMessageCount" resultType="int" parameterType="java.lang.Long" >
+    select 
+    count(*)
+    from message
+    where is_read = 0 and is_deleted = 0 and is_replied = 0 and receiver_id = #{receiverId,jdbcType=BIGINT}
+  </select>
+  
+  <delete id="delete" parameterType="com.jy.domain.Message" >
+    delete from message
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="create" parameterType="com.jy.domain.Message" useGeneratedKeys="true" keyProperty="id">
+    insert into message (id, sender_id, sender_pic, sender_pic_width, sender_pic_height, 
+      receiver_id, msg, msg_type, 
+      msg_status, is_read, is_deleted, 
+      is_replied, sendtime, readtime
+      )
+    values (#{id,jdbcType=BIGINT}, #{senderId,jdbcType=BIGINT}, 
+      #{senderPic,jdbcType=VARCHAR}, #{senderPicWidth,jdbcType=INTEGER}, #{senderPicHeight,jdbcType=INTEGER}, 
+      #{receiverId,jdbcType=BIGINT}, #{msg,jdbcType=VARCHAR}, #{msgType,jdbcType=VARCHAR}, 
+      #{msgStatus,jdbcType=VARCHAR}, #{isRead,jdbcType=BIT}, #{isDeleted,jdbcType=BIT}, 
+      #{isReplied,jdbcType=BIT}, #{sendtime,jdbcType=TIMESTAMP}, #{readtime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  
+  <update id="update" parameterType="com.jy.domain.Message" >
+    update message
+    <set >
+      <if test="senderId != null" >
+        sender_id = #{senderId,jdbcType=BIGINT},
+      </if>
+      <if test="senderPic != null" >
+        sender_pic = #{senderPic,jdbcType=VARCHAR},
+      </if>
+      <if test="senderPicWidth != null" >
+        sender_pic_width = #{senderPicWidth,jdbcType=VARCHAR},
+      </if>
+      <if test="senderPicHeight != null" >
+        sender_pic_height = #{senderPicHeight,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverId != null" >
+        receiver_id = #{receiverId,jdbcType=BIGINT},
+      </if>
+      <if test="msg != null" >
+        msg = #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="msgType != null" >
+        msg_type = #{msgType,jdbcType=VARCHAR},
+      </if>
+      <if test="msgStatus != null" >
+        msg_status = #{msgStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="isRead != null" >
+        is_read = #{isRead,jdbcType=BIT},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="isReplied != null" >
+        is_replied = #{isReplied,jdbcType=BIT},
+      </if>
+      <if test="sendtime != null" >
+        sendtime = #{sendtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="readtime != null" >
+        readtime = #{readtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+</mapper>

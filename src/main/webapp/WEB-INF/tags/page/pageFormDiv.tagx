@@ -1,0 +1,104 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+	
+	<jsp:directive.attribute name="pageModel" type="com.hsh.web.utils.PageModel" required="false" />
+	<jsp:directive.attribute name="formID" type="java.lang.String" required="true" />
+	<jsp:directive.attribute name="formAction" type="java.lang.String" required="true" />
+
+	<![CDATA[
+		 <script type="text/javascript">
+		 	function smt(formID,actionUrl,targetPage){
+		 		var form=$("#"+formID);
+		 		form.attr("action",actionUrl+"?p="+targetPage);
+		 		form.submit();
+		 	}
+		 </script>
+	]]>
+
+	<c:if test="${not empty pageModel and pageModel.pageCount gt 1}">
+		<c:set var="page" value="${pageModel.currentPage}" />
+		<c:set var="url" value="${pageModel.url}" />
+		<c:set var="pageCount" value="${pageModel.pageCount}" />
+		<c:set var="css" value="number" />
+		<div class="pageWrapper">
+		<div class="pageDiv">
+			<c:choose>
+				<c:when test="${page gt 1}">
+					<a class="${css}" href="javascript:smt('${formID}','${formAction }','1');">|&lt;&lt;</a>
+					<a class="${css}" href="javascript:smt('${formID}','${formAction }','${page-1 }');">&lt;</a>
+				</c:when>
+				<c:otherwise>
+				</c:otherwise>
+			</c:choose>
+			<c:choose>
+				<c:when test="${pageCount le 1}">
+					<a class="number current" href="javascript:smt('${formID}','${formAction }','1');">1</a>
+				</c:when>
+				<c:when test="${pageCount le 10}">
+					<c:forEach var="i" begin="1" end="${pageCount }" step="1">
+						<c:if test="${page eq i}">
+							<c:set var="css" value="number current" />
+						</c:if>
+						<c:if test="${page ne i}">
+							<c:set var="css" value="number" />
+						</c:if>
+						<a class="${css}" href="javascript:smt('${formID}','${formAction }','${i }');">${i}</a>
+					</c:forEach>
+				</c:when>
+				<c:otherwise>
+					<c:choose>
+						<c:when test="${page+7  lt pageCount}">
+							<c:choose>
+								<c:when test="${page-2 le 0}">
+									<c:forEach var="i" begin="1" end="10" step="1">
+										<c:if test="${page eq i}">
+											<c:set var="css" value="number current" />
+										</c:if>
+										<c:if test="${page ne i}">
+											<c:set var="css" value="number" />
+										</c:if>
+										<a class="${css}" href="javascript:smt('${formID}','${formAction }','${i }');">${i}</a>
+									</c:forEach>
+								</c:when>
+								<c:otherwise>
+									<c:forEach var="i" begin="${page-2}" end="${page+7 }" step="1">
+										<c:if test="${page eq i}">
+											<c:set var="css" value="number current" />
+										</c:if>
+										<c:if test="${page ne i}">
+											<c:set var="css" value="number" />
+										</c:if>
+										<a class="${css}" href="javascript:smt('${formID}','${formAction }','${i }');">${i}</a>
+									</c:forEach>
+								</c:otherwise>
+							</c:choose>
+						</c:when>
+						<c:otherwise>
+							<c:forEach var="i" begin="${pageCount-9}" end="${pageCount}"
+								step="1">
+								<c:if test="${page eq i}">
+									<c:set var="css" value="number current" />
+								</c:if>
+								<c:if test="${page ne i}">
+									<c:set var="css" value="number" />
+								</c:if>
+								<a class="${css}" href="javascript:smt('${formID}','${formAction }','${i }');">${i}</a>
+							</c:forEach>
+						</c:otherwise>
+					</c:choose>
+				</c:otherwise>
+			</c:choose>
+			<c:choose>
+				<c:when test="${page lt pageCount}">
+					<a class="${css}" href="javascript:smt('${formID}','${formAction }','${page + 1}');">&gt;</a>
+					<a class="${css}" href="javascript:smt('${formID}','${formAction }','${pageCount }');">&gt;&gt;|</a>
+				</c:when>
+				<c:otherwise>
+				</c:otherwise>
+			</c:choose>
+		</div>
+		</div>
+	</c:if>
+</jsp:root>

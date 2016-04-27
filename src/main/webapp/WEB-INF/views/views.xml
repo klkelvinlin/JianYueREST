@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+
+	<definition name="test" template="/WEB-INF/views/test.jspx">
+	</definition>
+
+	<definition name="index" template="/WEB-INF/views/index.html">
+	</definition>
+	
+	<definition name="terms" template="/WEB-INF/views/terms.html">
+	</definition>
+	
+	<definition name="ErrorPage" template="/WEB-INF/views/notification.jspx">
+		<put-attribute name="header" value="/WEB-INF/views/header.jspx" />
+		<put-attribute name="footer" value="/WEB-INF/views/footer.jspx" />
+	</definition>
+	
+	<definition name="basic" template="/WEB-INF/views/basic.jspx">
+		<put-attribute name="header" value="/WEB-INF/views/header.jspx" />
+		<put-attribute name="footer" value="/WEB-INF/views/footer.jspx" />
+	</definition>
+	
+</tiles-definitions>

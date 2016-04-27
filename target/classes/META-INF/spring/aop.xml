@@ -1,0 +1,11 @@
+<!DOCTYPE aspectj PUBLIC
+        "-//AspectJ//DTD//EN"
+        "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
+<aspectj>
+    <weaver options="-showWeaveInfo -XmessageHandlerClass:org.springframework.aop.aspectj.AspectJWeaverMessageHandler">
+
+    </weaver>
+    <aspects>
+        <aspect name="com.jy.dataaccess.dao.finder.impl.DomainObjectModifiedFlagAspect" />
+    </aspects>
+</aspectj>

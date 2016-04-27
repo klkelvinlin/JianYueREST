@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	class="navbar navbar-inverse navbar-static-top" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:directive.page pageEncoding="UTF-8" />
+	<c:set var="basePath">${pageContext.request.scheme}://${pageContext.request.serverName}${pageContext.request.contextPath}</c:set>
+	<div class="navbar-inner">
+		<div class="container">
+			<!-- <a class="btn btn-navbar" data-toggle="collapse"
+				data-target=".nav-collapse"> <span class="icon-bar">&amp;nbsp;</span>
+				<span class="icon-bar">&amp;nbsp;</span> <span class="icon-bar">&amp;nbsp;</span>
+			</a>  -->
+			<a class="brand" href="${basePath}/index">
+				<img src="${basePath}/image/logo.png" width="60"/>
+			</a>
+			<!-- 
+            <div class="nav-collapse collapse">
+                <ul class="nav pull-right">
+                    <li><a href="index.html">HOME</a></li>
+                    <li><a href="about-us.html">ABOUT US</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle active" data-toggle="dropdown">
+                            PAGES
+                            <b class="caret">&amp;nbsp;</b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="features.html">Features</a></li>
+                            <li><a href="services.html">Services</a></li>
+                            <li><a href="portfolio.html">Portfolio</a></li>
+                            <li><a href="portfolio-item.html">Portfolio Item</a></li>
+                            <li><a href="coming-soon.html">Coming Soon</a></li>
+                            <li><a href="sign-in.html">Sign in</a></li>
+                            <li><a href="sign-up.html">Sign up</a></li>
+                            <li><a href="backgrounds.html">Backgrounds</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="pricing.html">PRICING</a></li>
+                    <li><a href="contact.html">CONTACT US</a></li>
+                    <li><a href="blog.html">BLOG</a></li>
+                    <li><a class="btn-header" href="sign-up.html">Sign up</a></li>
+                    <li><a class="btn-header" href="sign-in.html">Sign in</a></li>
+                </ul>
+            </div>
+             -->
+		</div>
+	</div>
+</div>

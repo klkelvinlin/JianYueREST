@@ -1,0 +1,34 @@
+<html xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:tiles="http://tiles.apache.org/tags-tiles"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util">
+
+<jsp:output doctype-root-element="HTML"
+	doctype-system="about:legacy-compat" />
+<jsp:directive.page contentType="text/html;charset=UTF-8" />
+<jsp:directive.page pageEncoding="UTF-8" />
+
+<c:set var="basePath">${pageContext.request.scheme}://${pageContext.request.serverName}${pageContext.request.contextPath}</c:set>
+<!-- <link rel="shortcut icon" href="${basePath}/images/hsh_browser_icon.png" type="image/x-icon" /> -->
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<title>简约</title>
+</head>
+
+<body>
+		<!-- Start-Header-->
+		<tiles:insertAttribute name="header" />
+		<!-- End-Header-->
+
+		<!-- Start-Main -->
+		<tiles:insertAttribute name="body" />
+		<!-- End-Main-->
+
+		<!-- Start-Footer -->
+		<tiles:insertAttribute name="footer" />
+		<!-- End-Footer-->
+</body>
+</html>

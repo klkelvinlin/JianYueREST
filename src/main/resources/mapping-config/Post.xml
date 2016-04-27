@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.domain.Post">
+
+	<resultMap id="BaseResultMap" type="com.jy.domain.Post">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="author" property="author" jdbcType="BIGINT" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="pic" property="pic" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="like" property="like" jdbcType="SMALLINT" />
+		<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, author, title, pic, status, like, createtime
+	</sql>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from post
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from post
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	
+	<insert id="create" parameterType="com.jy.domain.Post">
+		insert into post (id, author, title,
+		pic, status, like,
+		createtime)
+		values (#{id,jdbcType=BIGINT}, #{author,jdbcType=BIGINT},
+		#{title,jdbcType=VARCHAR},
+		#{pic,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{like,jdbcType=SMALLINT},
+		#{createtime,jdbcType=TIMESTAMP})
+	</insert>
+	
+	<update id="update" parameterType="com.jy.domain.Post">
+		update post
+		<set>
+			<if test="author != null">
+				author = #{author,jdbcType=BIGINT},
+			</if>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="pic != null">
+				pic = #{pic,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="like != null">
+				like = #{like,jdbcType=SMALLINT},
+			</if>
+			<if test="createtime != null">
+				createtime = #{createtime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>
